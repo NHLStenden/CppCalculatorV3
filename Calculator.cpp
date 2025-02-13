@@ -3,7 +3,7 @@
 
 Calculator::Calculator(ILogger &loggerInstance) : logger(loggerInstance) {}
 
-double Calculator::calculate(double operand1, double operand2, char op) {
+double Calculator::compute(double operand1, char op, double operand2) {
     double result = 0;
     switch (op) {
         case '+':

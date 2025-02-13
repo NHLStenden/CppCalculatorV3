@@ -14,7 +14,7 @@ int main() {
     std::string input;
     bool eofDetected = false;
 
-    while (! eofDetected) {
+    while (!eofDetected) {
         std::getline(std::cin, input);
         eofDetected = std::cin.eof();
         if (!eofDetected) {
@@ -24,9 +24,16 @@ int main() {
 
             if (parser.parse(input, operand1, op, operand2)) {
                 try {
-                    double result = calculator.calculate(operand1, operand2, op);
-                    std::cout << std::fixed << std::setprecision(3) << operand1 << " " << op << " " << operand2 << " = "
-                              << result << std::endl;
+                    double result = calculator.compute(operand1, op, operand2);
+                    std::cout << std::fixed
+                              << std::setprecision(3)
+                              << operand1 << " "
+                              << op
+                              << " "
+                              << operand2
+                              << " = "
+                              << result
+                              << std::endl;
                 } catch (const std::runtime_error &e) {
                     std::cerr << e.what() << std::endl;
                 }

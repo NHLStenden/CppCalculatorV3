@@ -6,7 +6,7 @@
 TEST(CalculatorTest, RealFileLoggerTest) {
     FileLogger logger( "./test-file-logger.txt");
     Calculator calc(logger);
-    EXPECT_EQ(calc.calculate(2, 3, '+'), 5);
+    EXPECT_EQ(calc.compute(2, '+', 3), 5);
 }
 
 TEST(FileLoggerTest, LogToFile) {

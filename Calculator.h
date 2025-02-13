@@ -9,7 +9,7 @@ private:
 public:
     explicit Calculator(ILogger &loggerInstance);
 
-    double calculate(double a, double b, char op);
+    double compute(double a, char op, double b);
 };
 
 #endif // CALCULATOR_H
