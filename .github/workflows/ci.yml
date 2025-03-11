@@ -34,7 +34,7 @@ jobs:
           
 
       - name: Send Discord notification on failure
-        if: steps.test.outputs.exit_code != '0'
+        if: ${{ failure() }}
         run: |
           cat test_output.log
           grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
