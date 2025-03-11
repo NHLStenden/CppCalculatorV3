@@ -43,10 +43,11 @@ jobs:
           done < failed_files.log
           cat blame_info.txt
 
-      - name: Send Discord on failure
-        if: failure()
+      - name: Send Discord notification on failure
+        if: ${{ failure() }}
         run: |
+          BLAME_MSG=$(cat blame_info.txt | head -n 20 | jq -R -s '.')
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d '{"content": "🚨 Test run failed! Check the logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
+               -d "{\"content\": \"🚨 Test run failed! Check logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\`\`\`${BLAME_MSG}\`\`\`\"}" \
                ${{ secrets.DISCORD_WEBHOOK }}
