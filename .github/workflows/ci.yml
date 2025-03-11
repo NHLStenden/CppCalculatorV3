@@ -31,11 +31,12 @@ jobs:
         continue-on-error: true  # ✅ Zorgt ervoor dat de workflow doorgaat
         run: |
           ctest --test-dir build --output-on-failure > test_output.log 2>&1
-          cat test_output.log
           
+
       - name: Send Discord notification on failure
         if: steps.test.outputs.exit_code != '0'
         run: |
+          cat test_output.log
           grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
           echo "🚨 Test failed! Blame info:" > blame_info.txt
           while IFS= read -r file; do
