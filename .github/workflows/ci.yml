@@ -30,8 +30,9 @@ jobs:
         shell: bash
         continue-on-error: true  # ✅ Zorgt ervoor dat de workflow doorgaat
         run: |
-          ctest --test-dir build --output-on-failure | tee test_output.log
-
+          ctest --test-dir build --output-on-failure > test_output.log 2>&1
+          cat test_output.log
+          
       - name: Send Discord notification on failure
         if: steps.test.outputs.exit_code != '0'
         run: |
