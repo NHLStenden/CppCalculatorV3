@@ -26,17 +26,12 @@ jobs:
         run: cmake --build build
 
       - name: Run tests
-        id: test
-        shell: bash
-        continue-on-error: true  # ✅ Zorgt ervoor dat de workflow doorgaat
-        run: |
-          ctest --test-dir build --output-on-failure
-          
+        run: ctest --test-dir build --output-on-failure
 
-      - name: Send Discord notification on failure
-        if: ${{ failure() }}
+      - name: Send Discord on failure
+        if: failure()
         run: |
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d "{\"content\": \"🚨 Test run failed! Check logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\`\`\`${BLAME_MSG}\`\`\`\"}" \
+               -d '{"content": "🚨 Test run failed! Check the logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
                ${{ secrets.DISCORD_WEBHOOK }}
