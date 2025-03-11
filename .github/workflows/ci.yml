@@ -32,6 +32,9 @@ jobs:
         run: |
           ctest --test-dir build --output-on-failure | tee test_output.log
           echo "EXIT_CODE=${PIPESTATUS[0]}" >> $GITHUB_ENV  # ✅ Bewaart de echte exit-code van ctest
+
+      - name: Debug EXIT_CODE  # 🔍 Extra debug-stap
+        run: |
           echo "DEBUG: EXIT_CODE=${{ env.EXIT_CODE }}"
 
       - name: Send Discord notification on failure
