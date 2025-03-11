@@ -27,17 +27,17 @@ jobs:
 
       - name: Run tests
         id: test
-        continue-on-error: true  # Voorkomt dat de job stopt bij een fout
         run: |
           ctest --test-dir build --output-on-failure | tee test_output.log
+          echo "EXIT_CODE=$?" >> $GITHUB_ENV
 
       - name: Extract failing files
-        if: ${{ failure() }}
+        if: env.EXIT_CODE != '0'
         run: |
           grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
 
       - name: Get blame info
-        if: ${{ failure() }}
+        if: env.EXIT_CODE != '0'
         run: |
           echo "🚨 Test failed! Blame info:" > blame_info.txt
           while IFS= read -r file; do
@@ -47,7 +47,7 @@ jobs:
           cat blame_info.txt
 
       - name: Send Discord notification on failure
-        if: ${{ failure() }}
+        if: env.EXIT_CODE != '0'
         run: |
           BLAME_MSG=$(cat blame_info.txt | head -n 20 | jq -R -s '.')
           curl -H "Content-Type: application/json" \
