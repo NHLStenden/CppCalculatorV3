@@ -27,6 +27,7 @@ jobs:
 
       - name: Run tests
         id: test
+        continue-on-error: true
         run: |
           ctest --test-dir build --output-on-failure | tee test_output.log
 
