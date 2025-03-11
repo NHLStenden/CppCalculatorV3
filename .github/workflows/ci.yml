@@ -27,18 +27,19 @@ jobs:
 
       - name: Run tests
         id: test
+        continue-on-error: true
         run: |
           ctest --test-dir build --output-on-failure | tee test_output.log
           echo "EXIT_CODE=$?" >> $GITHUB_ENV
-          echo evn.EXIT_CODE
+          echo "evn.EXIT_CODE
 
       - name: Extract failing files
-        if: env.EXIT_CODE != '0'
+        if: failure()
         run: |
           grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
 
       - name: Get blame info
-        if: env.EXIT_CODE != '0'
+        if: failure()
         run: |
           echo "🚨 Test failed! Blame info:" > blame_info.txt
           while IFS= read -r file; do
@@ -48,7 +49,7 @@ jobs:
           cat blame_info.txt
 
       - name: Send Discord notification on failure
-        if: env.EXIT_CODE != '0'
+        if: failure()
         run: |
           BLAME_MSG=$(cat blame_info.txt | head -n 20 | jq -R -s '.')
           curl -H "Content-Type: application/json" \
