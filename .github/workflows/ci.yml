@@ -30,6 +30,7 @@ jobs:
         run: |
           ctest --test-dir build --output-on-failure | tee test_output.log
           echo "EXIT_CODE=$?" >> $GITHUB_ENV
+          echo evn.EXIT_CODE
 
       - name: Extract failing files
         if: env.EXIT_CODE != '0'
