@@ -26,7 +26,22 @@ jobs:
         run: cmake --build build
 
       - name: Run tests
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure | tee test_output.log
+
+      - name: Extract failing files
+        if: ${{ failure() }}
+        run: |
+          grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
+
+      - name: Get blame info
+        if: ${{ failure() }}
+        run: |
+          echo "🚨 Test failed! Blame info:" > blame_info.txt
+          while IFS= read -r file; do
+            echo "\n$file" >> blame_info.txt
+            git blame -L $(echo $file | cut -d':' -f2) $(echo $file | cut -d':' -f1) >> blame_info.txt || echo "Blame info not available" >> blame_info.txt
+          done < failed_files.log
+          cat blame_info.txt
 
       - name: Send Discord on failure
         if: failure()
