@@ -31,14 +31,9 @@ jobs:
         continue-on-error: true  # ✅ Zorgt ervoor dat de workflow doorgaat
         run: |
           ctest --test-dir build --output-on-failure | tee test_output.log
-          echo "EXIT_CODE=${PIPESTATUS[0]}" >> $GITHUB_ENV  # ✅ Bewaart de echte exit-code van ctest
-
-      - name: Debug EXIT_CODE  # 🔍 Extra debug-stap
-        run: |
-          echo "DEBUG: EXIT_CODE=${{ env.EXIT_CODE }}"
 
       - name: Send Discord notification on failure
-        if: env.EXIT_CODE != '0'  # ✅ Controleert of de tests zijn gefaald
+        if: steps.test.outputs.exit_code != '0'
         run: |
           grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
           echo "🚨 Test failed! Blame info:" > blame_info.txt
