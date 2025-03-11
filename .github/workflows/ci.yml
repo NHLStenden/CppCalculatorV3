@@ -27,3 +27,11 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
+
+      - name: Send Discord on failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content": "🚨 Test run failed! Check the logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
+               ${{ secrets.DISCORD_WEBHOOK }}
