@@ -30,21 +30,12 @@ jobs:
         shell: bash
         continue-on-error: true  # ✅ Zorgt ervoor dat de workflow doorgaat
         run: |
-          ctest --test-dir build --output-on-failure > test_output.log 2>&1
+          ctest --test-dir build --output-on-failure
           
 
       - name: Send Discord notification on failure
         if: ${{ failure() }}
         run: |
-          cat test_output.log
-          grep -oE '[^ ]+\.(cpp|h):[0-9]+' test_output.log | sort | uniq > failed_files.log || true
-          echo "🚨 Test failed! Blame info:" > blame_info.txt
-          while IFS= read -r file; do
-            echo "\n$file" >> blame_info.txt
-            git blame -L $(echo $file | cut -d':' -f2) $(echo $file | cut -d':' -f1) >> blame_info.txt || echo "Blame info not available" >> blame_info.txt
-          done < failed_files.log
-          cat blame_info.txt
-          BLAME_MSG=$(cat blame_info.txt | head -n 20 | jq -R -s '.')
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "{\"content\": \"🚨 Test run failed! Check logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\`\`\`${BLAME_MSG}\`\`\`\"}" \
