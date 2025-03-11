@@ -6,7 +6,7 @@
 TEST(CalculatorTest, Addition) {
     MockLogger logger;
     Calculator calculator(logger);
-    EXPECT_DOUBLE_EQ(calculator.compute(2.0, '+', 2.0), 5.0);
+    EXPECT_DOUBLE_EQ(calculator.compute(2.0, '+', 3s.0), 5.0);
 }
 
 TEST(CalculatorTest, Subtraction) {
