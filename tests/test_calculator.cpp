@@ -47,5 +47,5 @@ TEST(ParserTest, InvalidInput) {
     Parser parser;
     double op1, op2;
     char op;
-    EXPECT_FALSE(parser.parse("12.5++7.3", op1, op, op2));
+    EXPECT_FALSE(parser.parse("12.5++-7.3", op1, op, op2));
 }
