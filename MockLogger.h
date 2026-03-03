@@ -3,6 +3,8 @@
 #include "ILogger.h"
 class MockLogger : public ILogger {
 public:
-    void log(const std::string& message) override {}
+    void log(const std::string& message) override {
+
+    }
 };
 #endif // MOCKLOGGER_H

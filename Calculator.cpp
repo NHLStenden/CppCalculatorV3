@@ -13,7 +13,7 @@ double Calculator::compute(double operand1, char op, double operand2) {
             result = operand1 - operand2;
             break;
         case '*':
-            result = operand1 * operand2;
+            result = operand1 - operand2;
             break;
         case '/':
             if (operand2 == 0) {
